@@ -6,8 +6,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.blogspot.soyamr.weather.model.Current;
-import com.blogspot.soyamr.weather.model.Location;
 import com.blogspot.soyamr.weather.model.JsonResponse;
+import com.blogspot.soyamr.weather.model.Location;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         textResults = findViewById(R.id.results_from_api);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.weatherstack.com")
+                .baseUrl("http://api.weatherstack.com")   //5/55
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
