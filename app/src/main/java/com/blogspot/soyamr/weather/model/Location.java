@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.weather;
+package com.blogspot.soyamr.weather.model;
 
 import com.google.gson.annotations.SerializedName;
 

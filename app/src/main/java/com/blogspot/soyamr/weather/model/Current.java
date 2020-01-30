@@ -1,11 +1,11 @@
-package com.blogspot.soyamr.weather;
+package com.blogspot.soyamr.weather.model;
 
 public class Current {
 
     private int temperature;
     private int wind_speed;
     private int feelslike;
-    private String weather_descriptions[];
+    private String[] weather_descriptions;
     private String observation_time;
     private String weather_Icons;
     private String pressure;
