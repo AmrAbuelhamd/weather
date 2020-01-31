@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">weather</string>
+    <string name="type_city_name">\ type a city name</string>
+    <string name="get_weather_info">get weather info</string>
+    <string name="weather">Weather</string>
+    <string name="weather_icon">weather icon</string>
+    <string name="percipitation">Percipitation</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="hum">HUM</string>
+    <string name="received_temperature">Received Temperature</string>
+    <string name="visibility">Visibility</string>
 
     <string-array name="cities_array">
         <item>Tokyo</item>

@@ -9,11 +9,7 @@ public class Location {
     @SerializedName("country")
     private String countryName;
 
-    private String timezone_id;
-
-    private String localtime_epoch;
-
-    private String utc_offset;
+    private String localtime;
 
     public String getCityName() {
         return cityName;
@@ -24,17 +20,8 @@ public class Location {
     }
 
 
-    public String getTimezone_id() {
-        return timezone_id;
+    public String getLocaltime() {
+        return localtime;
     }
-
-    public String getLocaltime_epoch() {
-        return localtime_epoch;
-    }
-
-    public String getUtc_offset() {
-        return utc_offset;
-    }
-
 
 }

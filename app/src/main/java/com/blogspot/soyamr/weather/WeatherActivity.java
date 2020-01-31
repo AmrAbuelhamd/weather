@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -12,8 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.blogspot.soyamr.weather.model.Current;
+import com.blogspot.soyamr.weather.model.Error;
 import com.blogspot.soyamr.weather.model.JsonResponse;
 import com.blogspot.soyamr.weather.model.Location;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,6 +24,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/*
+this class uses retrofit to get the weather info from api and uses picaso to donwload a small photo
+
+ */
 public class WeatherActivity extends AppCompatActivity {
 
     private ImageView imageView;
@@ -37,6 +44,9 @@ public class WeatherActivity extends AppCompatActivity {
     private FrameLayout frameLayout;
     private ProgressBar progressBar;
     private TextView errorMessageTextView;
+    String cityNameForQuery;
+    private LinearLayout linearLayout;
+    private TextView localTime;
 
     /**
      * Find the Views in the layout<br />
@@ -59,6 +69,8 @@ public class WeatherActivity extends AppCompatActivity {
         frameLayout = findViewById(R.id.progressBarHolder);
         progressBar = findViewById(R.id.progress_bar);
         errorMessageTextView = findViewById(R.id.error_message);
+        linearLayout = findViewById(R.id.weather_layout);
+        localTime = findViewById(R.id.local_time);
     }
 
 
@@ -67,11 +79,16 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_activity);
 
+        //get's the city name from the previous activity
         Intent intent = getIntent();
-        String cityNameForQuery = intent.getStringExtra("city name");
+        cityNameForQuery = intent.getStringExtra("city name");
 
         findViews();
 
+        startRetrofitWork();
+    }
+
+    private void startRetrofitWork() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.weatherstack.com")
@@ -84,38 +101,85 @@ public class WeatherActivity extends AppCompatActivity {
         call.enqueue(new Callback<JsonResponse>() {
             @Override
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
+
                 if (!response.isSuccessful()) {
-                    progressBar.setVisibility(View.GONE);
-                    errorMessageTextView.setVisibility(View.VISIBLE);
-                    errorMessageTextView.setText("code: " + response.code());
+                    showErrorMesg("code: " + response.code());
                     return;
                 }
-                frameLayout.setVisibility(View.GONE);
 
                 JsonResponse cityWeathers = response.body();
+                if (!cityWeathers.isSuccess()) {
+                    //gets the error class with detailed info about the error
+                    Error error = cityWeathers.getError();
+                    if (error != null) {
+                        StringBuilder errorMsg = new StringBuilder("");
+                        errorMsg.append("code: " + error.getCode());
+                        errorMsg.append("\ntype: " + error.getType());
+                        errorMsg.append("\ninfo: " + error.getInfo());
+
+                        showErrorMesg(errorMsg.toString());
+                        return;
+                    } else {
+                        showErrorMesg("something went wrong");
+                    }
+
+                }
+
                 Location location = cityWeathers.getLocation();
                 Current current = cityWeathers.getCurrent();
+                if (location != null)
+                    initializeViews(location, current);
+                else showErrorMesg("something went wrong");
 
-                countnryName.setText(location.getCountryName());
-                cityName.setText(location.getCityName());
-                temp.setText(current.getTemperature() + "\u2103");
-                describtion.setText(current.getWeather_descriptions()[0]);
-                percip.setText(current.getPrecip() + " mm");
-                windSpeed.setText(current.getWind_speed() + " km/h");
-                humidity.setText(current.getHumidity() + " %");
-                recievedTemp.setText(String.valueOf(current.getFeelslike()));
-                visibiltiy.setText(current.getVisibility() + " km");
-                pressure.setText(current.getPressure() + " hPa");
+                frameLayout.setVisibility(View.GONE);
 
             }
 
             @Override
             public void onFailure(Call<JsonResponse> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                errorMessageTextView.setVisibility(View.VISIBLE);
-                errorMessageTextView.setText(t.getMessage());
+                showErrorMesg(t.getMessage());
             }
         });
     }
 
+    /*
+    initialize The Views To The Data Received From the Api
+     */
+    private void initializeViews(Location location, Current current) {
+        countnryName.setText(location.getCountryName());
+        cityName.setText(location.getCityName());
+        temp.setText(current.getTemperature() + "\u2103");
+        describtion.setText(current.getWeather_descriptions()[0]);
+        percip.setText(current.getPrecip() + " mm");
+        windSpeed.setText(current.getWind_speed() + " km/h");
+        humidity.setText(current.getHumidity() + " %");
+        recievedTemp.setText(String.valueOf(current.getFeelslike()));
+        visibiltiy.setText(current.getVisibility() + " km");
+        pressure.setText(current.getPressure() + " hPa");
+
+        //loads the photo that expresses the weather state
+        Picasso.get().load(current.getWeather_Icons()[0]).into(imageView);
+
+        //initialize the background of the layout according to the time in that city weather it's
+        //day or night
+        if (current.getIs_day().equals("yes")) {
+            linearLayout.setBackgroundResource(R.drawable.day);
+        } else {
+            linearLayout.setBackgroundResource(R.drawable.night);
+        }
+
+        //i am getting the full date from the api, here i am cutting the time part of it
+        String time = location.getLocaltime();
+        time = time.substring(10);
+        localTime.setText(time);
+    }
+
+    /*
+    hides the lading indicator and shoes the textView and shows the user the error
+     */
+    void showErrorMesg(String msg) {
+        progressBar.setVisibility(View.GONE);
+        errorMessageTextView.setVisibility(View.VISIBLE);
+        errorMessageTextView.setText(msg);
+    }
 }

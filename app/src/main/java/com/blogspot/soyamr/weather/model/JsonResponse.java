@@ -1,11 +1,18 @@
 package com.blogspot.soyamr.weather.model;
 
-import com.blogspot.soyamr.weather.model.Current;
-import com.blogspot.soyamr.weather.model.Location;
-
 public class JsonResponse {
     private Current current;
     private Location location;
+    boolean success;
+    private Error error;
+
+    public Error getError() {
+        return error;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
 
     public Current getCurrent() {
         return current;

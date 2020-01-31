@@ -7,7 +7,7 @@ public class Current {
     private int feelslike;
     private String[] weather_descriptions;
     private String observation_time;
-    private String weather_Icons;
+    private String weather_icons[];
     private String pressure;
     private String humidity;
     private String visibility;
@@ -34,8 +34,8 @@ public class Current {
         return observation_time;
     }
 
-    public String getWeather_Icons() {
-        return weather_Icons;
+    public String[] getWeather_Icons() {
+        return weather_icons;
     }
 
     public String getPressure() {
