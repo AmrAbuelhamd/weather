@@ -9,6 +9,7 @@
     <string name="hum">HUM</string>
     <string name="received_temperature">Received Temperature</string>
     <string name="visibility">Visibility</string>
+    <string name="pressure">Pressure</string>
 
     <string-array name="cities_array">
         <item>Tokyo</item>
