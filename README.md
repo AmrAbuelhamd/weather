@@ -22,3 +22,5 @@ application that gets the weather for the entered city name
 - https://stackoverflow.com/questions/25462523/retrofit-api-to-retrieve-a-png-image
 - <h2> https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted , strang problem with android 9+
 - a usefull retrofit Tutorial https://www.youtube.com/watch?v=4JGvDUlfk7Y 
+- <b>putting the id of progressbar in <androidx.constraintlayout.widget.Group will cause the progresws bar to never disapear 
+                                                                              no matter how much i try, i guess it's a bug
